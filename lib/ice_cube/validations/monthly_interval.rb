@@ -2,9 +2,9 @@ module IceCube
 
   module Validations::MonthlyInterval
 
-    def interval(interval = 1)
+    def interval(interval)
       @interval = interval
-      validations_for(:interval) << Validation.new(interval)
+      replace_validations_for(:interval, [Validation.new(interval)])
       clobber_base_validations(:month)
       self
     end

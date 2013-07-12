@@ -1,5 +1,5 @@
 module IceCube
 
-  VERSION = '0.9.1.1'
+  VERSION = '0.10.1.1'
 
 end

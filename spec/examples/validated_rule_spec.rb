@@ -3,9 +3,10 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe IceCube, "::ValidatedRule" do
   describe "#next_time" do
+
     context "monthly" do
       let(:rule) { IceCube::Rule.monthly }
-      before { rule.reset }
+
       it "Should return current day when starting on same day" do
         first = Time.new(2013, 2, 25, 0, 0, 0)
         schedule = IceCube::Schedule.new(first)
@@ -18,6 +19,13 @@ describe IceCube, "::ValidatedRule" do
         schedule = IceCube::Schedule.new(first)
         schedule.add_recurrence_rule rule
         rule.next_time(first + 1, schedule, nil).should == Time.new(2013, 3, 25, 0, 0, 0)
+      end
+
+      it 'should return the next month near end of longer month [#171]' do
+        schedule = IceCube::Schedule.new(Date.new 2013, 1, 1)
+        [27, 28, 29, 30, 31].each do |day|
+          rule.next_time(Time.new(2013, 1, day), schedule, nil).should == Time.new(2013, 2, 1)
+        end
       end
 
       context "DST edge" do
@@ -37,6 +45,15 @@ describe IceCube, "::ValidatedRule" do
           rule.next_time(first + 1.hour + 1.second, schedule, nil).to_s.should_not == first.to_s
         end
       end
+
+    end
+
+    it 'should match times with usec' do
+      first_time = Time.new(2012, 12, 21, 12, 21, 12.12121212)
+      schedule = stub(:start_time => first_time)
+      rule = IceCube::Rule.secondly
+
+      rule.next_time(first_time + 1, schedule, nil).should == first_time + 1
     end
   end
 end

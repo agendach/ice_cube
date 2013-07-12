@@ -5,7 +5,7 @@ module IceCube
     def day_of_week(dows)
       dows.each do |day, occs|
         occs.each do |occ|
-          day = TimeUtil.symbol_to_day(day) if day.is_a?(Symbol)
+          day = TimeUtil.sym_to_wday(day)
           validations_for(:day_of_week) << Validation.new(day, occ)
         end
       end
@@ -18,7 +18,7 @@ module IceCube
       attr_reader :day, :occ
 
       StringBuilder.register_formatter(:day_of_week) do |segments|
-        'on the ' + segments.join(' when it is the ')
+        'on the ' + segments.join(' and ')
       end
 
       def type

@@ -111,6 +111,7 @@ module IceCube
       hash = IceCube::FlexibleHash.new original_hash
       return nil unless match = hash[:rule_type].match(/\:\:(.+?)Rule/)
       rule = IceCube::Rule.send(match[1].downcase.to_sym, hash[:interval] || 1)
+      rule.interval(hash[:interval] || 1, TimeUtil.wday_to_sym(hash[:week_start] || 0)) if match[1] == "Weekly"
       rule.until(TimeUtil.deserialize_time(hash[:until])) if hash[:until]
       rule.count(hash[:count]) if hash[:count]
       hash[:validations] && hash[:validations].each do |key, value|
@@ -129,7 +130,7 @@ module IceCube
     end
 
     def on?(time, schedule)
-      next_time(time, schedule, time) == time
+      next_time(time, schedule, time).to_i == time.to_i
     end
 
     # Whether this rule requires a full run
@@ -176,7 +177,7 @@ module IceCube
       end
 
     end
-    
+
   end
 
 end
