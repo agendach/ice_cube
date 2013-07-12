@@ -59,9 +59,9 @@ module IceCube
               if expr.strip.length > 2  # day with occurence
                 occ = expr[0..-3].to_i 
                 dows[day].nil? ? dows[day] = [occ] : dows[day].push(occ)
-                days.delete(TimeUtil.symbol_to_day(day))
+                days.delete(TimeUtil.sym_to_wday(day))
               else
-                days.push TimeUtil.symbol_to_day(day) if dows[day].nil?
+                days.push TimeUtil.sym_to_wday(day) if dows[day].nil?
               end
           end
           params[:validations][:day_of_week] = dows unless dows.empty?
