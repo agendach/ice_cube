@@ -118,6 +118,11 @@ ICAL
       "#{ k }:#{ v }"
     }.join("\n")
   end
+  
+  it "don't use UNTIL if COUNT is present" do
+	  schedule = IceCube::Schedule.new(Time.now)
+	  sorted_ical(IceCube::Rule.from_ical("FREQ=WEEKLY;COUNT=4;UNTIL=20130912T215959Z").to_ical).should eq(sorted_ical("FREQ=WEEKLY;COUNT=4"))
+	end
 
   context "instantiation" do
     it "loads an ICAL string" do

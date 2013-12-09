@@ -82,6 +82,9 @@ module IceCube
       params[:interval] ||= 1
       # WKST only valid for weekly rules
       params.delete(:wkst) unless params[:freq] == 'weekly'
+      
+      # don't use UNTIL if COUNT is present
+      params.delete(:until) if params[:count]
 
       rule = IceCube::Rule.send(*params.values_at(:freq, :interval, :wkst).compact)
       rule.count(params[:count]) if params[:count]
