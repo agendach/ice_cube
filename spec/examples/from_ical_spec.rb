@@ -3,6 +3,14 @@ require 'active_support/time'
 
 describe IceCube::Rule, 'from_ical' do
 
+  it 'should skip incomplete params' do
+		rule = IceCube::Rule.from_ical "FREQ=DAILY;INTERVAL="
+		rule.class.should == IceCube::DailyRule
+    rule = IceCube::Rule.from_ical "FREQ=DAILY;=;BYDAY=MO,TU"
+		rule.class.should == IceCube::DailyRule
+		rule.should == IceCube::Rule.daily.day(:monday, :tuesday)
+  end
+
 	it 'should return a IceCube DailyRule class for a basic daily rule' do
 		rule = IceCube::Rule.from_ical "FREQ=DAILY"
 		rule.class.should == IceCube::DailyRule
