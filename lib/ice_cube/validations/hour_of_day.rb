@@ -6,7 +6,10 @@ module IceCube
 
     # Add hour of day validations
     def hour_of_day(*hours)
-      hours.each do |hour|
+      hours.flatten.each do |hour|
+        unless hour.is_a?(Fixnum)
+          raise ArgumentError, "expecting Fixnum value for hour, got #{hour.inspect}"
+        end
         validations_for(:hour_of_day) << Validation.new(hour)
       end
       clobber_base_validations(:hour)

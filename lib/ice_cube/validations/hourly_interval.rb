@@ -3,10 +3,11 @@ module IceCube
   module Validations::HourlyInterval
 
     def interval(interval)
-      validations_for(:interval) << Validation.new(interval)
+      @interval = interval
+      replace_validations_for(:interval, [Validation.new(interval)])
       clobber_base_validations(:hour)
       self
-    end 
+    end
 
     class Validation
 
@@ -26,6 +27,9 @@ module IceCube
 
       def build_ical(builder)
         builder['FREQ'] << 'HOURLY'
+        unless interval == 1
+          builder['INTERVAL'] << interval
+        end
       end
 
       def initialize(interval)
@@ -39,7 +43,7 @@ module IceCube
       def validate(time, schedule)
         raise ZeroInterval if interval == 0
         start_time = schedule.start_time
-        sec = (time.to_i - time.to_i % ONE_HOUR) - 
+        sec = (time.to_i - time.to_i % ONE_HOUR) -
           (start_time.to_i - start_time.to_i % ONE_HOUR)
         hours = sec / ONE_HOUR
         unless hours % interval == 0

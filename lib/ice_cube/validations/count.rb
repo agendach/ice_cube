@@ -8,8 +8,11 @@ module IceCube
     end
 
     def count(max)
+      unless max.nil? || max.is_a?(Fixnum)
+        raise ArgumentError, "Expecting Fixnum or nil value for count, got #{max.inspect}"
+      end
       @count = max
-      replace_validations_for(:count, [Validation.new(max, self)]) # replace
+      replace_validations_for(:count, [Validation.new(max, self)])
       self
     end
 
@@ -45,7 +48,7 @@ module IceCube
       end
 
       StringBuilder.register_formatter(:count) do |segments|
-        count = segments.first 
+        count = segments.first
         "#{count} #{count == 1 ? 'time' : 'times'}"
       end
 

@@ -3,7 +3,8 @@ module IceCube
   module Validations::MinutelyInterval
 
     def interval(interval)
-      validations_for(:interval) << Validation.new(interval)
+      @interval = interval
+      replace_validations_for(:interval, [Validation.new(interval)])
       clobber_base_validations(:min)
       self
     end
@@ -26,6 +27,9 @@ module IceCube
 
       def build_ical(builder)
         builder['FREQ'] << 'MINUTELY'
+        unless interval == 1
+          builder['INTERVAL'] << interval
+        end
       end
 
       def build_hash(builder)

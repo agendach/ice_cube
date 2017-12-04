@@ -2,8 +2,9 @@ module IceCube
 
   module Validations::YearlyInterval
 
-    def interval(interval = 1)
-      validations_for(:interval) << Validation.new(interval)
+    def interval(interval)
+      @interval = interval
+      replace_validations_for(:interval, [Validation.new(interval)])
       clobber_base_validations(:year)
     end
 
@@ -25,6 +26,9 @@ module IceCube
 
       def build_ical(builder)
         builder['FREQ'] << 'YEARLY'
+        unless interval == 1
+          builder['INTERVAL'] << interval
+        end
       end
 
       def initialize(interval)
