@@ -92,6 +92,11 @@ describe IceCube::Rule, 'from_ical' do
     rule.should == IceCube::Rule.weekly(2, :monday)
   end
 
+  it 'should be able to parse by_set_pos start (BYSETPOS)' do
+    rule = IceCube::Rule.from_ical("FREQ=MONTHLY;BYDAY=MO,WE;BYSETPOS=-1,1")
+    rule.should == IceCube::Rule.monthly.day(:monday, :wednesday).by_set_pos([-1, 1])
+  end
+
 	it 'test' do
 		schedule = IceCube::Schedule.new(Time.now)
 		schedule.add_recurrence_rule(IceCube::Rule.from_ical("FREQ=DAILY;COUNT=5"))
